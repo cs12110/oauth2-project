@@ -5,9 +5,6 @@ import org.apache.oltu.oauth2.as.issuer.OAuthIssuer;
 import org.apache.oltu.oauth2.as.issuer.OAuthIssuerImpl;
 import org.apache.oltu.oauth2.as.request.OAuthTokenRequest;
 import org.apache.oltu.oauth2.as.response.OAuthASResponse;
-import org.apache.oltu.oauth2.common.OAuth;
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
-import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +41,15 @@ public class AccessTokenController {
         //构建OAuth请求
         try {
             OAuthTokenRequest oauthRequest = new OAuthTokenRequest(request);
+
+            // 进行用户权限校验
+            String clientId = oauthRequest.getClientId();
             String clientSecret = oauthRequest.getClientSecret();
-            if (clientSecret != null || clientSecret != "") {
+
+            boolean vip = isVip(clientId, clientSecret);
+
+            logger.info("vip is:{}", vip);
+            if (vip) {
                 //生成Access Token
                 oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
                 final String accessToken = oauthIssuerImpl.accessToken();
@@ -53,14 +57,20 @@ public class AccessTokenController {
                 //生成OAuth响应
                 response = OAuthASResponse
                         .tokenResponse(HttpServletResponse.SC_OK)
-                        .setAccessToken(accessToken)
+                        .setAccessToken(accessToken + "haiyannnn")
                         .buildJSONMessage();
+                //根据OAuthResponse生成ResponseEntity
+                return new ResponseEntity<>(response.getBody(),
+                        HttpStatus.valueOf(response.getResponseStatus()));
             }
-            //根据OAuthResponse生成ResponseEntity
-            return new ResponseEntity(response.getBody(), HttpStatus.valueOf(response.getResponseStatus()));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private boolean isVip(String account, String password) {
+        int num = (int) (Math.random() * 2);
+        return num == 0;
     }
 }
