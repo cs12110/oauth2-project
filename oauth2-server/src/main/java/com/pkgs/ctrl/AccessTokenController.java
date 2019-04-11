@@ -34,21 +34,21 @@ public class AccessTokenController {
     @RequestMapping(value = "/responseAccessToken", method = RequestMethod.POST)
     public HttpEntity token(HttpServletRequest request) {
         logger.info("ResponseAccessToken");
+        OAuthResponse response;
+        OAuthIssuer oauthIssuerImpl;
 
-        OAuthIssuer oauthIssuerImpl = null;
-        OAuthResponse response = null;
-
-        //构建OAuth请求
         try {
+            //构建OAuth请求
             OAuthTokenRequest oauthRequest = new OAuthTokenRequest(request);
 
-            // 进行用户权限校验
+            // 进行用户权限校验,判读用户是否具有resourceUrl的访问权限
             String clientId = oauthRequest.getClientId();
             String clientSecret = oauthRequest.getClientSecret();
+            String resourceUrl = oauthRequest.getParam("resourceUrl");
 
             boolean vip = isVip(clientId, clientSecret);
 
-            logger.info("vip is:{}", vip);
+            logger.info("vip is:{} to visit:{}", vip, resourceUrl);
             if (vip) {
                 //生成Access Token
                 oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());

@@ -83,6 +83,7 @@ public class AuthClientController {
                     .setClientSecret(clientSecret)
                     .setCode(code)
                     .setRedirectURI(redirectUrl)
+                    .setParameter("resourceUrl", "https://mr3306.top/docs/")
                     .buildQueryMessage();
             OAuthAccessTokenResponse oAuthResponse = oAuthClient.accessToken(oAuthClientRequest, OAuth.HttpMethod.POST);
 
@@ -126,6 +127,4 @@ public class AuthClientController {
         }
         return null;
     }
-
-
 }
