@@ -9,13 +9,18 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>oauth2-server</artifactId>
+    <artifactId>oauth2-service</artifactId>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.apache.oltu.oauth2/org.apache.oltu.oauth2.authzserver -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.oltu.oauth2/org.apache.oltu.oauth2.resourceserver -->
         <dependency>
             <groupId>org.apache.oltu.oauth2</groupId>
-            <artifactId>org.apache.oltu.oauth2.authzserver</artifactId>
+            <artifactId>org.apache.oltu.oauth2.resourceserver</artifactId>
             <version>1.0.2</version>
         </dependency>
     </dependencies>
